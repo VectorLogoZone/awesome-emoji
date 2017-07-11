@@ -16,7 +16,7 @@ Images
 
 Other
 -----
- * [https://www.emoji.codes/](Short code reference)
+ * [Short code reference](https://www.emoji.codes/)
  
 Research
 --------

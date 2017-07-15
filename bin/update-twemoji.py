@@ -12,10 +12,10 @@ import sys
 import tempfile
 import time
 
-default_repo = "https://github.com/twitter/twemoji/tree/gh-pages/2/svg"
+default_repo = "https://github.com/twitter/twemoji"
 default_branch = "master"
-default_output = os.path.join(os.getcwd(), "noto")
-default_subdirectory = "svg"
+default_output = os.path.join(os.getcwd(), "twemoji")
+default_subdirectory = "2/svg"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-q", "--quiet", help="hide status messages", default=True, dest='verbose', action="store_false")
@@ -64,7 +64,7 @@ for file in os.listdir(srcdir):
 if args.verbose:
     sys.stdout.write("INFO: copying...")
 for file in files:
-    new_name = file[7:]
+    new_name = file
     shutil.copy2(os.path.join(srcdir, file), os.path.join(args.output, new_name))
     if args.verbose:
         sys.stdout.write(".")
@@ -81,5 +81,4 @@ if args.cache == None and args.cleanup == True:
     shutil.rmtree(tmpdir)
 
 if args.verbose:
-    print("INFO: noto update complete at %s" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
-Contact GitHub API Training Shop Blog About
+    print("INFO: twemoji update complete at %s" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))

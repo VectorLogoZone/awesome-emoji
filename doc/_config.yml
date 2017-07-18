@@ -1,0 +1,22 @@
+#
+# _config.yml for andrew.marcuse.info
+#
+
+exclude: [ "CNAME", "README.md", "LICENSE.txt", "tmp", "*.sh", "**/*_src*" ]
+permalink: /blog/:year/:month/:day/:title/index.html
+production_url: https://emoji.fileformat.info
+title: LATER site 
+markdown: kramdown
+gems:
+  - jekyll-redirect-from
+defaults:
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default"
+
+google_analytics_id: LATER
+google_validation: LATER
+alexa_validation: LATER
+bing_validation: LATER

@@ -5,7 +5,7 @@
 exclude: [ "CNAME", "README.md", "LICENSE.txt", "tmp", "*.sh", "**/*_src*" ]
 permalink: /blog/:year/:month/:day/:title/index.html
 production_url: https://emoji.fileformat.info
-title: LATER site 
+title: FileFormat.Info Emoji SVGs 
 markdown: kramdown
 gems:
   - jekyll-redirect-from
@@ -16,7 +16,7 @@ defaults:
     values:
       layout: "default"
 
-google_analytics_id: LATER
+google_analytics_id: UA-328425-43
 google_validation: LATER
 alexa_validation: LATER
 bing_validation: LATER

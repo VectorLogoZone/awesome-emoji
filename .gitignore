@@ -5,3 +5,4 @@ tmp/
 *~
 crash.log
 .idea/
+.cache/

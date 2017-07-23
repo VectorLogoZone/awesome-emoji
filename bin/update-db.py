@@ -1,13 +1,74 @@
 #!/usr/bin/python3
 # 
-# parse emoji data into json 
+# parse Unicode's emoji data into db (just a json file for the moment)
 #
 
 import argparse
+import datetime
 import json
 import os
 import re
+import shutil
 import sys
+import tempfile
+import time
+import urllib.parse
+import urllib.request
+
+default_output = os.path.abspath("../docs")
+default_src = "http://unicode.org/Public/emoji/5.0/"
+
+datafiles = {
+        "test": "emoji-test.txt",
+        "data": "emoji-data.txt"
+    }
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-q", "--quiet", help="hide status messages", default=True, dest='verbose', action="store_false")
+parser.add_argument("--cache", help="location of previously downloaded source files", action="store")
+parser.add_argument("--output", help="output directory (default=%s)" % default_output, action="store", default=default_output)
+parser.add_argument("--nocleanup", help="do not erase temporary files", default=True, dest='cleanup', action="store_false")
+parser.add_argument("--source", help="source url (default=%s)" % default_src, action="store", default=default_src)
+
+args = parser.parse_args()
+
+if args.verbose:
+    print("INFO: update-db starting at %s" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+
+if args.cache != None:
+    if args.verbose:
+        print("INFO: using cached files in %s" % args.cache)
+    srcdir = os.path.abspath(args.cache)
+    if os.path.isdir(srcdir) == False:
+        print("ERROR: cache directory '%s' is not valid" % srcdir)
+        sys.exit(1)
+
+    for fn in datafiles.values():
+        if os.path.isfile(os.path.join(srcdir, fn)) == False:
+            print("ERROR: cache directory '%s' does not contain file '%s'" % (srcdir, fn))
+            sys.exit(3)
+else:
+    tmpdir = tempfile.mkdtemp(prefix="unicode-emoji-")
+    if args.verbose:
+        print("INFO: using temporary directory %s" % tmpdir)
+
+    for fn in datafiles.values():
+        src = urllib.parse.urljoin(args.source, fn)
+        dest = os.path.join(tmpdir, fn)
+        if args.verbose:
+            print("INFO: downloading file '%s' (from '%s' to '%s')" % (fn, src, dest))
+        urllib.request.urlretrieve(src, dest)
+
+    srcdir = tmpdir
+
+if os.path.isdir(args.output) == False:
+    if args.verbose:
+        print("INFO: creating directory '%s'" % args.output)
+    os.makedirs(args.output)
+else:
+    if args.verbose:
+        print("INFO: writing to directory '%s'" % args.output)
+
 
 def to_hex(i):
     if i > 0xFFFF:
@@ -19,9 +80,9 @@ emojis = dict()
 
 
 line_pattern = re.compile("([A-F0-9 ]+);([-a-z ]+)# ([^ ]+) (.*)$")
-filename = 'emoji-test.txt'
+filename = datafiles["test"]
 sys.stdout.write("INFO: processing file '%s'" % filename)
-f = open(filename, mode='r', encoding='utf-8')
+f = open(os.path.join(srcdir, filename), mode='r', encoding='utf-8')
 line_count = 0
 emoji_count = 0
 for rawline in f:
@@ -47,7 +108,7 @@ for rawline in f:
     emoji['chars'] = matcher.group(3)
     emoji['text'] = matcher.group(4).strip()
     
-    emojis[emoji['codepoints']] = emoji
+    emojis[emoji['codepoints'].replace(' ', '_')] = emoji
     
 f.close()
     
@@ -57,9 +118,9 @@ sys.stdout.write("INFO: complete %d emoji processed\n" % emoji_count)
 
 
 line_pattern = re.compile("([.A-F0-9 ]+);([-A-Za-z_ ]+)# +([^ ]+) (.*)$")
-filename = 'emoji-data.txt'
+filename = datafiles["data"]
 sys.stdout.write("INFO: processing file '%s'" % filename)
-f = open(filename, mode='r', encoding='utf-8')
+f = open(os.path.join(srcdir, filename), mode='r', encoding='utf-8')
 line_count = 0
 emoji_count = 0
 new_count = 0
@@ -85,7 +146,7 @@ for rawline in f:
     else:
         codepoints = []
         split = str.split("..")
-        for loop in range(int(split[0], 16), int(split[0], 16)+1):
+        for loop in range(int(split[0], 16), int(split[1], 16)+1):
             codepoints.append(to_hex(loop))
         
     for codepoint in codepoints:
@@ -93,12 +154,15 @@ for rawline in f:
         if codepoint in emojis:
             emoji = emojis[codepoint] 
         else:
+            #if args.verbose:
+            #    sys.stdout.write("\nDEBUG: new emoji codepoint '%s'\n" % codepoint)
             new_count += 1
             emoji = {}
             emoji['codepoints'] = codepoint
             emoji['chars'] = chr(int(codepoint, 16))
+            emoji['status'] = "component-only"
             emojis[codepoint] = emoji
-    
+
         if 'property' not in emoji:
             emoji['property'] = {}
             
@@ -114,17 +178,25 @@ sys.stdout.write("INFO: complete %d emoji added\n" % new_count)
 
 filename = "output.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
-f = open(filename, mode='w', encoding='utf-8')
+f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
 f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
 f.close()
 sys.stdout.write("INFO: save complete: %d emoji\n" % len(emojis))
 
 filename = "output.sql"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
-f = open(filename, mode='w', encoding='utf-8')
+f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
 #f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
 f.close()
 sys.stdout.write("INFO: save complete: %d emoji\n" % len(emojis))
+
+if args.cache == None and args.cleanup == True:
+    if args.verbose:
+        print("INFO: removing temp directory '%s'" % tmpdir)
+    shutil.rmtree(tmpdir)
+
+if args.verbose:
+    print("INFO: unicode emoji data update complete at %s" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
 
 

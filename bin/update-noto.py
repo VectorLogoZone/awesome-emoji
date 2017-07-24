@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# generate strings.xml files for Android from translations.json
+# copy noto images from github
 #
 
 import argparse

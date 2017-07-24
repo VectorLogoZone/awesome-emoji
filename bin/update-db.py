@@ -4,6 +4,7 @@
 #
 
 import argparse
+import collections
 import datetime
 import json
 import os
@@ -72,11 +73,11 @@ else:
 
 def to_hex(i):
     if i > 0xFFFF:
-        return "%X" % i
+        return "%x" % i
     else:
-        return "%04X" % i
+        return "%04x" % i
 
-emojis = dict()
+emojis = collections.OrderedDict()
 
 
 line_pattern = re.compile("([A-F0-9 ]+);([-a-z ]+)# ([^ ]+) (.*)$")
@@ -103,7 +104,7 @@ for rawline in f:
         continue
     
     emoji = {}
-    emoji['codepoints'] = matcher.group(1).strip()
+    emoji['codepoints'] = matcher.group(1).strip().lower()
     emoji['status'] = matcher.group(2).strip()
     emoji['chars'] = matcher.group(3)
     emoji['text'] = matcher.group(4).strip()
@@ -142,7 +143,7 @@ for rawline in f:
     
     str = matcher.group(1).strip()
     if ".." not in str:
-        codepoints = [ str ]
+        codepoints = [ str.lower() ]
     else:
         codepoints = []
         split = str.split("..")
@@ -177,22 +178,27 @@ sys.stdout.write("INFO: complete %d emoji processed\n" % emoji_count)
 sys.stdout.write("INFO: complete %d emoji added\n" % new_count)
 
 #
+# hack for missing 20e3
+#
+emojis['20e3'] = { "codepoints": "20e3", 'chars': chr(0x20e3), 'status': 'component-only', 'text': 'combining enclosing keycap' }
+
+#
 # link non-fully-qualified to their parents
 #
 count = 0
 for key in emojis.keys():
-    if emojis[key]["status"] == "fully-qualified" and "_FE0F" in key:
-        unqualified = key.replace("_FE0F", "", 1)
+    if emojis[key]["status"] == "fully-qualified" and "_fe0f" in key:
+        unqualified = key.replace("_fe0f", "", 1)
         if unqualified in emojis:
             count = count + 1
             #sys.stdout.write("DEBUG: %s -> %s (1)\n" % (unqualified, key))
             emojis[unqualified]['fully-qualified'] = key
         else:
-            sys.stdout.write("WARNING: no unqualified found for %s" % unqualifed)
+            sys.stdout.write("WARNING: no unqualified found for %s" % unqualified)
 
         # multiple instance of FE0F, so need to map with missing only 2nd instance, or missing both instances
-        if "_FE0F" in unqualified:
-            unqualified = key.replace("_FE0F", "")
+        if "_fe0f" in unqualified:
+            unqualified = key.replace("_fe0f", "")
             if unqualified in emojis:
                 count = count + 1
                 sys.stdout.write("DEBUG: %s -> %s (both)\n" % (unqualified, key))
@@ -224,23 +230,21 @@ if count > 0:
 else:
     sys.stdout.write("INFO: all non-fully-qualified emoji are mapped\n")
 
-filename = "output.json"
+filename = "data.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
 f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
-f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
+f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=False, indent=4, separators=(',', ': ')))
 f.close()
 sys.stdout.write("INFO: save complete: %d emoji\n" % len(emojis))
 
 normalize = {}
 for key in emojis.keys():
     if emojis[key]["status"] == "non-fully-qualified":
-        normalize[key.lower()] = emojis[key]['fully-qualified'].lower()
+        normalize[key] = emojis[key]['fully-qualified']
     elif emojis[key]["status"] == "component-only":
-        normalize[key.lower()] = key.lower()
+        normalize[key] = key
     else:
-        normalize[key.lower()] = key.lower()
-
-normalize["20e3"] = "20e3"
+        normalize[key] = key
 
 filename = "normalize.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)

@@ -2,4 +2,4 @@
 #
 # script to run on localhost
 #
-jekyll serve --watch --source doc
+jekyll serve --watch --source docs

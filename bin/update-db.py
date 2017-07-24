@@ -176,6 +176,54 @@ sys.stdout.write("INFO: complete %d lines processed\n" % line_count)
 sys.stdout.write("INFO: complete %d emoji processed\n" % emoji_count)
 sys.stdout.write("INFO: complete %d emoji added\n" % new_count)
 
+#
+# link non-fully-qualified to their parents
+#
+count = 0
+for key in emojis.keys():
+    if emojis[key]["status"] == "fully-qualified" and "_FE0F" in key:
+        unqualified = key.replace("_FE0F", "", 1)
+        if unqualified in emojis:
+            count = count + 1
+            #sys.stdout.write("DEBUG: %s -> %s (1)\n" % (unqualified, key))
+            emojis[unqualified]['fully-qualified'] = key
+        else:
+            sys.stdout.write("WARNING: no unqualified found for %s" % unqualifed)
+
+        # multiple instance of FE0F, so need to map with missing only 2nd instance, or missing both instances
+        if "_FE0F" in unqualified:
+            unqualified = key.replace("_FE0F", "")
+            if unqualified in emojis:
+                count = count + 1
+                sys.stdout.write("DEBUG: %s -> %s (both)\n" % (unqualified, key))
+                emojis[unqualified]['fully-qualified'] = key
+            else:
+                sys.stdout.write("WARNING: no unqualified found for %s" % unqualifed)
+
+            unqualified = key[0:-5]     # HACK, but it is always at the end
+            if unqualified in emojis:
+                count = count + 1
+                sys.stdout.write("DEBUG: %s -> %s (2)\n" % (unqualified, key))
+                emojis[unqualified]['fully-qualified'] = key
+            else:
+                sys.stdout.write("WARNING: no unqualified found for %s" % unqualifed)
+
+#sys.stdout.write("\n")
+sys.stdout.write("INFO: %d not-fully-qualified emojis mapped\n" % count)
+
+count = 0
+for key in emojis.keys():
+    if emojis[key]["status"] == "non-fully-qualified":
+        if "fully-qualified" not in emojis[key]:
+            count = count + 1
+            sys.stdout.write("ERROR: no fully qualified version of %s\n" % key)
+
+if count > 0:
+    sys.stdout.write("ERROR: %d non-fully-qualified emoji remain unmapped\n" % count)
+    sys.exit(5)
+else:
+    sys.stdout.write("INFO: all non-fully-qualified emoji are mapped\n")
+
 filename = "output.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
 f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
@@ -183,10 +231,21 @@ f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=True, indent=4, separat
 f.close()
 sys.stdout.write("INFO: save complete: %d emoji\n" % len(emojis))
 
-filename = "output.sql"
+normalize = {}
+for key in emojis.keys():
+    if emojis[key]["status"] == "non-fully-qualified":
+        normalize[key.lower()] = emojis[key]['fully-qualified'].lower()
+    elif emojis[key]["status"] == "component-only":
+        normalize[key.lower()] = key.lower()
+    else:
+        normalize[key.lower()] = key.lower()
+
+normalize["20e3"] = "20e3"
+
+filename = "normalize.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
 f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
-#f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
+f.write(json.dumps(normalize, ensure_ascii=False, sort_keys=True, indent=4, separators=(',', ': ')))
 f.close()
 sys.stdout.write("INFO: save complete: %d emoji\n" % len(emojis))
 

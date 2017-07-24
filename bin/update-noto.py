@@ -5,6 +5,7 @@
 
 import argparse
 import datetime
+import json
 import os
 import sh
 import shutil
@@ -16,6 +17,7 @@ default_repo = "https://github.com/googlei18n/noto-emoji"
 default_branch = "master"
 default_output = os.path.join(os.getcwd(), "noto")
 default_subdirectory = "svg"
+default_mapping = "../docs/normalize.json"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-q", "--quiet", help="hide status messages", default=True, dest='verbose', action="store_false")
@@ -23,6 +25,7 @@ parser.add_argument("--branch", help="git branch (default='%s')" % default_branc
 parser.add_argument("--cache", help="location of previously downloaded repo", action="store")
 parser.add_argument("--output", help="output directory (default=%s)" % default_output, action="store", default=default_output)
 parser.add_argument("--nocleanup", help="do not erase temporary files", default=True, dest='cleanup', action="store_false")
+parser.add_argument("--normalmap", help="file with json map of normalized names", default=default_mapping)
 parser.add_argument("--repo", help="git repo (default=%s)" % default_repo, action="store", default=default_repo)
 
 args = parser.parse_args()
@@ -61,16 +64,32 @@ for file in os.listdir(srcdir):
     if file.endswith(".svg"):
         files.append(file)
 
+with open(args.normalmap) as nmfp:
+    normal_map = json.load(nmfp)
+
+unknown = []
 if args.verbose:
     sys.stdout.write("INFO: copying...")
 for file in files:
-    new_name = file[7:]
-    shutil.copy2(os.path.join(srcdir, file), os.path.join(args.output, new_name))
+    new_name = file[7:-4]
+    if new_name in normal_map:
+        normalized = normal_map[new_name]
+    else:
+        unknown.append(file[:-4])
+        normalized = new_name
+
+    shutil.copy2(os.path.join(srcdir, file), os.path.join(args.output, normalized + ".svg"))
     if args.verbose:
         sys.stdout.write(".")
         sys.stdout.flush()
 if args.verbose:
     sys.stdout.write("done!\n")
+
+if len(unknown) > 0:
+    if args.verbose:
+        for emoji in unknown:
+            sys.stdout.write("WARNING: unknown emoji '%s'\n" % emoji)
+    sys.stdout.write("WARNING: %d unknown emoji\n" % len(unknown))
 
 if args.verbose:
     print("INFO: %d files loaded" % len(files))

@@ -17,7 +17,7 @@ default_repo = "https://github.com/googlei18n/noto-emoji"
 default_branch = "master"
 default_output = os.path.join(os.getcwd(), "noto")
 default_subdirectory = "svg"
-default_mapping = "../docs/normalize.json"
+default_mapping = "../docs/data/normalize.json"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-q", "--quiet", help="hide status messages", default=True, dest='verbose', action="store_false")

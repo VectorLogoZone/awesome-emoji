@@ -16,7 +16,7 @@ import time
 import urllib.parse
 import urllib.request
 
-default_output = os.path.abspath("../docs")
+default_output = os.path.abspath("../docs/data")
 default_src = "http://unicode.org/Public/emoji/5.0/"
 
 datafiles = {
@@ -230,7 +230,7 @@ if count > 0:
 else:
     sys.stdout.write("INFO: all non-fully-qualified emoji are mapped\n")
 
-filename = "data.json"
+filename = "emoji.json"
 sys.stdout.write("INFO: saving to file '%s'\n" % filename)
 f = open(os.path.join(args.output, filename), mode='w', encoding='utf-8')
 f.write(json.dumps(emojis, ensure_ascii=False, sort_keys=False, indent=4, separators=(',', ': ')))

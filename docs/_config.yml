@@ -7,7 +7,7 @@ permalink: /blog/:year/:month/:day/:title/index.html
 production_url: https://emoji.fileformat.info
 title: FileFormat.Info Emoji SVGs 
 markdown: kramdown
-gems:
+plugins:
   - jekyll-redirect-from
 defaults:
   -

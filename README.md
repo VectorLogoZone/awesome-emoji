@@ -13,6 +13,7 @@ Images
  * [Apple Color Emoji](https://en.wikipedia.org/wiki/Apple_Color_Emoji) - [extractor](https://github.com/tmm1/emoji-extractor)
  * [Emojipedia sample images](https://emojipedia.org/emojipedia/)
  * [Designer emojis](https://www.dropbox.com/s/59ru27fq642m8l0/Designer_Emojis_DesignCue_Updated.zip) - from [DesignCue](https://www.designcue.io/)
+ * [Streamline Emoji](http://emoji.streamlineicons.com/) - but the [repo](https://github.com/webalys-hq/streamline-emoji) is empty.
 
 Codes
 -----

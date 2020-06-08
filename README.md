@@ -20,7 +20,7 @@ Straight from the horse's mouth
  - [Skin-tone comparison table](https://unicode.org/emoji/charts/full-emoji-modifiers.html) the emoji missing from the above chart, with images for each major platform.
  - [Recent additions](https://unicode.org/emoji/charts/emoji-released.html) - list of what's new.  Usually not supported on all the platforms yet.
  - [List](https://unicode.org/emoji/charts/emoji-list.html) - just a single sample image, but with the official name and alternate names/keywords for each emoji.
- - [Counts](https://unicode.org/emoji/charts/emoji-counts.html) - so you know that there are 3,019 distinct emoji.
+ - [Counts](https://unicode.org/emoji/charts/emoji-counts.html) - so you know that there are 3,304 distinct emoji (as of June 2020).
  - [Unicode Technical Standard 51](http://unicode.org/reports/tr51/) - all the gory technical details. A bit dry, unless you are a emoji geek (which you definitely are if you have read this far!).
 
 ## Comparison Sites

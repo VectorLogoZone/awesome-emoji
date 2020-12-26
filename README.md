@@ -1,5 +1,5 @@
-# Awesome Emoji [<img alt="Awesome Emoji Logo" src="docs/favicon.svg" height="90" align="right"/>](https://www.fileformat.info/info/emoji/)
-[![Emoji Count](https://img.shields.io/badge/Emoji-3%2C019-brightgreen.svg)](https://unicode.org/emoji/charts/emoji-list.html)
+# Awesome Emoji [<img alt="Awesome Emoji Logo" src="https://www.vectorlogo.zone/logos/awesome-emoji/awesome-emoji-icon.svg" height="90" align="right"/>](https://www.awesome-emoji.org/)
+[![Emoji Count](https://img.shields.io/badge/Emoji-3%2C304-brightgreen.svg)](https://unicode.org/emoji/charts/emoji-list.html)
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
 ## Images

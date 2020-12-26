@@ -1,8 +1,10 @@
+*~
+.cache/
+crash.log
+.DS_Store
+.idea/
+.jekyll-metadata
+.jekyll-cache
 _site/
 .sass-cache/
-.jekyll-metadata
 tmp/
-*~
-crash.log
-.idea/
-.cache/

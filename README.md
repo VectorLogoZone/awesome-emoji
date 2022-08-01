@@ -4,14 +4,14 @@
 
 ## Images
 Open + Vector = awesome!
- 
+
  - Google [Noto](https://www.google.com/get/noto/help/emoji/) - the complete set from Android ([source](https://github.com/googlei18n/noto-emoji)).
  - Twitter [Twemoji](https://twemoji.twitter.com/) - a complete set, licensed CC-BY 4.0 but with easy attribution requirements ([source](https://github.com/twitter/twemoji/tree/gh-pages/2/svg)).
  - [OpenMoji](http://openmoji.org/) - consistent line-oriented images, including some [custom extras](https://openmoji.org/library/#group=extras-openmoji).  Licensed CC BY-SA-4 ([source](https://github.com/hfg-gmuend/openmoji)).
  - Mozilla's [Firefox OS](https://github.com/mozilla/fxemoji) - very nice, but no longer being updated.
  - [EmojiTwo](https://emojitwo.github.io/) - a fork of the last open version of EmojiOne.  Only a few updates since, but still pretty good.
  - [Emojidex](https://github.com/emojidex/emojidex-vectors) aka PhantomOpenEmoji.
- - [Streamline Emoji](http://emoji.streamlineicons.com/) - cute and CC-BY-4.0, but the [repo](https://github.com/webalys-hq/streamline-emoji) is empty.
+ - [Streamline](https://www.streamlinehq.com/)'s [Kawaii](https://www.streamlinehq.com/emojis/kawaii-emoji) and [Freemoji](https://www.streamlinehq.com/emojis/freebies-freemojis) - cute, freemium (attribution required for free use)
 
 ## Unicode Emoji Data
 
@@ -34,7 +34,7 @@ Straight from the horse's mouth
 
 ## Utilities
  - [EmojiCopy](https://www.emojicopy.com/) - a decent copy-emoji-to-clipboard site.
- 
+
 
 ## License
  [CC0](LICENSE.txt)

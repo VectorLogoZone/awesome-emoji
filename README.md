@@ -7,6 +7,7 @@ Open + Vector = awesome!
 
  - Google [Noto](https://www.google.com/get/noto/help/emoji/) - the complete set from Android ([source](https://github.com/googlei18n/noto-emoji)).
  - Twitter [Twemoji](https://twemoji.twitter.com/) - a complete set, licensed CC-BY 4.0 but with easy attribution requirements ([source](https://github.com/twitter/twemoji/tree/gh-pages/v/14.0.2/svg)).
+ - Microsoft [Fluent](https://fluentemoji.com/) - complete set with multiple flavors ([source](https://github.com/microsoft/fluentui-emoji))
  - [OpenMoji](http://openmoji.org/) - consistent line-oriented images, including some [custom extras](https://openmoji.org/library/#group=extras-openmoji).  Licensed CC BY-SA-4 ([source](https://github.com/hfg-gmuend/openmoji)).
  - Mozilla's [Firefox OS](http://mozilla.github.io/fxemoji/) - very nice, but no longer being updated ([source](https://github.com/mozilla/fxemoji)).
  - [EmojiTwo](https://emojitwo.github.io/) - a fork of the last open version of EmojiOne.  Only a few updates since, but still pretty good [source](https://github.com/EmojiTwo/emojitwo/tree/master/svg).

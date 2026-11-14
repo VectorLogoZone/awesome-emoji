@@ -34,6 +34,7 @@ Straight from the horse's mouth
 
 ## Utilities
  - [EmojiCopy](https://www.emojicopy.com/) - a decent copy-to-clipboard site.
+ - [EmojiMagic](https://emojimagic.io/) - search emojis by description, mix two emojis into a new one, and export transparent PNGs (free, no signup).
  - [Emoji-cheat-sheet](https://www.webfx.com/tools/emoji-cheat-sheet/) - another copy-to-clipboard site, though not updated in 4 years ([source](https://github.com/WebpageFX/emoji-cheat-sheet.com)).
 
 ## License
